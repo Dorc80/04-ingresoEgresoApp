@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +13,11 @@ export class RegisterComponent implements OnInit {
 
   registroForm: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _authService: AuthService,
+    private _router: Router
+  ) {
 
     this.registroForm = this._formBuilder.group({
       nombre: ['', Validators.required],
@@ -28,11 +34,14 @@ export class RegisterComponent implements OnInit {
 
   crearUsuario() {
 
-    console.log(this.registroForm);
-    console.log(this.registroForm.valid);
-    console.log(this.registroForm.value);
+    if (this.registroForm.invalid) { return; }
 
-    console.log(this.registroForm.get('nombre')?.valid);
+    const { nombre, correo, password } = this.registroForm.value;
+
+    this._authService.crearUsuario(nombre, correo, password)
+      .then(credenciales => this._router.navigate(['/login']))
+      .catch(error => console.error(error));
+
 
   }
 
