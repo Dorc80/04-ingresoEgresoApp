@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -29,13 +30,29 @@ export class LoginComponent implements OnInit {
 
   login() {
 
-    if(this.loginForm.invalid) { return; }
+    if (this.loginForm.invalid) { return; }
+
+    Swal.fire({
+      title: 'Espere por favor ',
+      didOpen: () => {
+        Swal.showLoading(null);
+      }
+    });
 
     const { email, password } = this.loginForm.value;
 
     this._authService.loginUsuario(email, password)
-      .then(resp => this._router.navigate(['/']))
-      .catch(error => console.log(error));
+      .then(() => {
+        Swal.close();
+        this._router.navigate(['/'])
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.message,
+        })
+      });
 
   }
 
