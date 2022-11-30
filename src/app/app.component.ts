@@ -12,9 +12,7 @@ export class AppComponent implements OnInit {
   constructor(private _auth: AuthService) { }
 
   ngOnInit(): void {
-    
     this._auth.initAuthListener();
-
   }
 
 }
