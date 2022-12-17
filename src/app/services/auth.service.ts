@@ -41,7 +41,6 @@ export class AuthService {
         });
 
       } else if (this.userSuscription) {
-        console.log('me sali y que pasa');
         this.userSuscription.unsubscribe();
         this._user = null;
         this._store.dispatch(actions.unSetUser());
