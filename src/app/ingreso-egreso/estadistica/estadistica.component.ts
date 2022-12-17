@@ -21,13 +21,11 @@ export class EstadisticaComponent implements OnInit, OnDestroy {
 
   ingresosEgresosSubs!: Subscription;
 
-  public doughnutChartLabels: string[] = [ 'Download Sales', 'In-Store Sales', 'Mail-Order Sales' ];
+  public doughnutChartLabels: string[] = [ 'Ingresos', 'Egresos' ];
   public doughnutChartData: ChartData<'doughnut'> = {
     labels: this.doughnutChartLabels,
     datasets: [
-      { data: [ 350, 450, 100 ] },
-      { data: [ 50, 150, 120 ] },
-      { data: [ 250, 130, 70 ] }
+      { data: [ 350, 450 ] },
     ]
   };
   public doughnutChartType: ChartType = 'doughnut';
@@ -40,6 +38,11 @@ export class EstadisticaComponent implements OnInit, OnDestroy {
 
   generarEstadisitica(items: IngresoEgreso[]) {
 
+    this.totalEgresos = 0;
+    this.totalIngresos = 0;
+    this.ingresos = 0;
+    this.egresos = 0;
+
     for (const item of items) {
       if (item.tipo === 'ingreso') {
         this.totalIngresos += item.monto;
@@ -49,6 +52,10 @@ export class EstadisticaComponent implements OnInit, OnDestroy {
         this.egresos++;
       }
     }
+
+    this.doughnutChartData.datasets = [
+      { data: [ this.totalIngresos, this.totalEgresos ] },
+    ]
 
   }
 
